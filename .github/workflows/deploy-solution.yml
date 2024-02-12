@@ -1,0 +1,27 @@
+name: Deploy TestProject
+
+on:
+  workflow_run:
+    workflows: ["Pack TestProject"]
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment: production
+    steps:
+      - uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: pack-solution.yml
+          name: packed-solution
+      - uses: microsoft/powerplatform-actions/import-solution@v0
+        with:
+          environment-url:https://orgc84a0ff6.crm.dynamics.com
+          app-id: 42c34a83-9be8-49c0-9c80-52e0d67e459d
+          tenant-id: 82506baf-09ef-4fcf-a09f-375df072f488
+          client-secret : KI68Q~dA1N.ixY4jDUSK5rO4raa6VNMnaiWXXcB1
+          solution-file: TestProject_managed.zip
+       
